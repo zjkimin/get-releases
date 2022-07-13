@@ -1,4 +1,4 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from typing import Optional, Union
 
 import uvicorn
@@ -111,4 +111,4 @@ async def root(request:Request):
     )
 
 if __name__=='__main__':
-    uvicorn.run(app='main:app',reload=True)
+    uvicorn.run(app='main:app',host='0.0.0.0',port=11996,reload=True)
