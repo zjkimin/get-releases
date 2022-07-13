@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    {% include "header.html" %}
+    <!-- rand manga: {{title}}  -->
+    <title>{{title}}</title>
+</head>
+
+<body class='typora-export'>
+    <div class='typora-export-content'>
+        <div id='write'>
+            <h1>{{title}}</h1>
+            <hr />
+            {% for repo, soft in softs.items() %}
+            <h2><a href="http://github.com/{{ soft.repo }}">{{ soft.repo }}</a></h2>
+            <h4>当前版本: {{ soft.release }}</h4>
+            <details>
+                <summary>更新日志</summary>
+                <blockquote>
+                    {{ soft.body|safe }}
+                </blockquote>
+            </details>
+            <details>
+                <summary>下载链接</summary>
+                {% for asset in soft.assets %}
+                <ul>
+                    <li><a href="{{asset.url}}" target="_blank">{{asset.name}}</a></li>
+                    <ul><li><a href="{{asset.urlCN}}" target="_blank">[国内] {{asset.name}}</a></li></ul>
+                </ul>
+                {% endfor %}
+            </details>
+            <hr />
+            {% endfor %}
+            {% include "footer.html" %}
+        </div>
+</body>
+
+</html>
