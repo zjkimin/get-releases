@@ -97,7 +97,7 @@ class SoftwareManager:
             return
 
 sources=["2dust/v2rayN", "2dust/v2rayNG", "Notsfsssf/pixez-flutter", "huanghongxun/HMCL", "Mrs4s/go-cqhttp", "thpatch/thtk", "fatedier/frp"]
-manager=SoftwareManager(sources,minutes=1)
+manager=SoftwareManager(sources,minutes=1,timezone="Asia/Shanghai")
 
 @app.get("/")
 async def root(request:Request):
