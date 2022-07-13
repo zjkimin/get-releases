@@ -84,7 +84,7 @@ class SoftwareManager:
 
     async def get_update(self,repo:str) -> Optional[SoftWare]:
         url='https://api.github.com/repos/{}/releases/latest'.format(repo)
-        req=await requests.get(url=url,auth=('zjkwdy','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'))
+        req=await requests.get(url=url,auth=('zjkimin','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'))
         try:
             j=req.json()
             ret=SoftWare(repo,j)
