@@ -100,7 +100,7 @@ class SoftwareManager:
 
 manager=SoftwareManager(cfg.sources,minutes=1,timezone="Asia/Shanghai")
 
-@app.get("/")
+@app.get(cfg.path)
 async def root(request:Request):
     # print(manager.getAll())
     return templates.TemplateResponse(
