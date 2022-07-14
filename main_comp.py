@@ -2,15 +2,15 @@
 #兼容3.10以下
 from dataclasses import dataclass
 
-import uvicorn
 import markdown
+import uvicorn
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from httpx import AsyncClient
 
-import cfg #cfg.py: see cfg_temp.py
+import cfg  # cfg.py: see cfg_temp.py
 
 app=FastAPI()
 requests=AsyncClient()
@@ -21,8 +21,23 @@ app.mount(cfg.path+'static',StaticFiles(directory='rms/static'),name='static')
 @dataclass
 class assetFile:
     name:str
+    size:int
     url:str
     urlCN:str
+    def get_size(self) -> int:
+        return self.size
+
+    @staticmethod
+    def __size_hum_convert(value) -> str:
+        units = ["B", "KB", "MB", "GB", "TB", "PB"]
+        size = 1024.0
+        for i in range(len(units)):
+            if (value / size) < 1:
+                return "%.2f%s" % (value, units[i])
+            value = value / size
+    
+    def get_size_hum(self) -> str:
+        return self.__size_hum_convert(self.get_size())
 
     def __repr__ (self) -> str:
         return '[{}]({}) [[CN] {}]({})'.format(self.name,self.url,self.name,self.urlCN)
@@ -32,6 +47,7 @@ class SoftWare:
     update_time:str
     release:str
     body:str
+    beta:bool
     assets:list
 
     # init from json
@@ -39,11 +55,12 @@ class SoftWare:
         self.repo=repo
         self.update_time=json['published_at']
         self.release=json['tag_name']
+        self.beta=json['prerelease']
         self.body='<p>'+('</p><p>'.join(markdown.markdown(json['body']).splitlines()))+'</p>'
         self.assets=list()
         assets=json['assets']
         for asset in assets:
-            assetfile=assetFile(asset['name'],asset['browser_download_url'],'https://ghproxy.com/'+asset['browser_download_url'])
+            assetfile=assetFile(asset['name'],asset['size'],asset['browser_download_url'],'https://ghproxy.com/'+asset['browser_download_url'])
             # print(assetfile)
             self.assets.append(assetfile)
     
@@ -87,10 +104,10 @@ class SoftwareManager:
         return ret
 
     async def get_update(self,repo:str):
-        url='https://api.github.com/repos/{}/releases/latest'.format(repo)
+        url='https://api.github.com/repos/{}/releases'.format(repo)
         req=await requests.get(url=url,auth=cfg.auth)
         try:
-            j=req.json()
+            j=req.json()[0]
             ret=SoftWare(repo,j)
             print('Success to get release for',repo)
             return ret

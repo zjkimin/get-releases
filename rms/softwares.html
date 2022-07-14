@@ -14,7 +14,7 @@
             <hr />
             {% for repo, soft in softs.items() %}
             <h2><a href="http://github.com/{{ soft.repo }}">{{ soft.repo }}</a></h2>
-            <h4 id='{{repo}}'>当前版本: {{ soft.release }} -&nbsp;</h4>
+            <h4 id='{{repo}}' {% if soft.beta %} style="color: red;" {% endif %}>当前版本: {% if soft.beta %} [BETA] {% endif %}{{ soft.release }} -&nbsp;</h4>
             <script>document.getElementById('{{repo}}').innerText+=diff_date("{{ soft.update_time }}")</script>
             <details>
                 <summary>更新日志</summary>
@@ -26,8 +26,8 @@
                 <summary>下载链接</summary>
                 {% for asset in soft.assets %}
                 <ul>
-                    <li><a href="{{asset.url}}" target="_blank">{{asset.name}}</a></li>
-                    <ul><li><a href="{{asset.urlCN}}" target="_blank">[国内] {{asset.name}}</a></li></ul>
+                    <li><a href="{{asset.url}}" target="_blank">{{asset.name}}</a> ({{asset.get_size_hum()}})</li>
+                    <ul><li><a href="{{asset.urlCN}}" target="_blank">[国内] {{asset.name}}</a> ({{asset.get_size_hum()}})</li></ul>
                 </ul>
                 {% endfor %}
             </details>
