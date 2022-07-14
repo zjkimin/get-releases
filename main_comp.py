@@ -113,4 +113,4 @@ async def root(request:Request):
     )
 
 if __name__=='__main__':
-    uvicorn.run(app='main:app',host='0.0.0.0',port=cfg.port,reload=True)
+    uvicorn.run(app='main_comp:app',host='0.0.0.0',port=cfg.port,reload=True)
