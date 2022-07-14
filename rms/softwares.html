@@ -14,7 +14,8 @@
             <hr />
             {% for repo, soft in softs.items() %}
             <h2><a href="http://github.com/{{ soft.repo }}">{{ soft.repo }}</a></h2>
-            <h4>当前版本: {{ soft.release }}</h4>
+            <h4 id='{{repo}}'>当前版本: {{ soft.release }} -&nbsp;</h4>
+            <script>document.getElementById('{{repo}}').innerText+=diff_date("{{ soft.update_time }}")</script>
             <details>
                 <summary>更新日志</summary>
                 <blockquote>
