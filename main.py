@@ -9,6 +9,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from httpx import AsyncClient
 
+from cfg import auth #cfg.py: auth=('username','$GITHUB_SEC')
+
 app=FastAPI()
 requests=AsyncClient()
 templates=Jinja2Templates(directory='rms')
@@ -85,7 +87,7 @@ class SoftwareManager:
 
     async def get_update(self,repo:str) -> Optional[SoftWare]:
         url='https://api.github.com/repos/{}/releases/latest'.format(repo)
-        req=await requests.get(url=url,auth=('zjkimin','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'))
+        req=await requests.get(url=url,auth=auth)
         try:
             j=req.json()
             ret=SoftWare(repo,j)
