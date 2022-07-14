@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 import uvicorn
+import markdown
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
@@ -38,7 +39,7 @@ class SoftWare:
         self.repo=repo
         self.update_time=json['published_at']
         self.release=json['tag_name']
-        self.body='<p>'+('</p><p>'.join(json['body'].splitlines()))+'</p>'
+        self.body='<p>'+('</p><p>'.join(markdown.markdown(json['body']).splitlines()))+'</p>'
         self.assets=list()
         assets=json['assets']
         for asset in assets:
