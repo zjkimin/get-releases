@@ -14,7 +14,7 @@ import cfg  #cfg.py: see cfg_temp.py
 app=FastAPI()
 requests=AsyncClient()
 templates=Jinja2Templates(directory='rms')
-app.mount('/static',StaticFiles(directory='rms/static'),name='static')
+app.mount(cfg.path+'static',StaticFiles(directory='rms/static'),name='static')
 
 
 @dataclass
