@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from httpx import AsyncClient
 
-from cfg import auth #cfg.py: auth=('username','$GITHUB_SEC')
+import cfg #cfg.py: see cfg_temp.py
 
 app=FastAPI()
 requests=AsyncClient()
@@ -87,7 +87,7 @@ class SoftwareManager:
 
     async def get_update(self,repo:str):
         url='https://api.github.com/repos/{}/releases/latest'.format(repo)
-        req=await requests.get(url=url,auth=auth)
+        req=await requests.get(url=url,auth=cfg.auth)
         try:
             j=req.json()
             ret=SoftWare(repo,j)
@@ -98,8 +98,7 @@ class SoftwareManager:
             print('Reason',e)
             return
 
-sources=["2dust/v2rayN", "2dust/v2rayNG", "Notsfsssf/pixez-flutter", "huanghongxun/HMCL", "Mrs4s/go-cqhttp", "thpatch/thtk", "fatedier/frp"]
-manager=SoftwareManager(sources,minutes=1,timezone="Asia/Shanghai")
+manager=SoftwareManager(cfg.sources,minutes=1,timezone="Asia/Shanghai")
 
 @app.get("/")
 async def root(request:Request):
@@ -114,4 +113,4 @@ async def root(request:Request):
     )
 
 if __name__=='__main__':
-    uvicorn.run(app='main:app',host='0.0.0.0',port=11996,reload=True)
+    uvicorn.run(app='main:app',host='0.0.0.0',port=cfg.port,reload=True)
