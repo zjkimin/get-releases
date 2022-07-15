@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional, Union
 
 import markdown
@@ -46,6 +47,7 @@ class assetFile:
 class SoftWare:
     repo:str
     update_time:str
+    update_timestamp:int
     release:str
     body:str
     beta:bool
@@ -55,6 +57,7 @@ class SoftWare:
     def __init__(self,repo,json:dict[str,Union[int,str,list,dict]]):
         self.repo=repo
         self.update_time=json['published_at']
+        self.update_timestamp=datetime.strptime(self.update_time,'%Y-%m-%dT%H:%M:%SZ').timestamp().__int__()
         self.release=json['tag_name']
         self.beta=json['prerelease']
         self.body='<p>'+('</p><p>'.join(markdown.markdown(json['body']).splitlines()))+'</p>'
@@ -83,7 +86,8 @@ class SoftwareManager:
     async def update(self) -> None:
         print('get_updates')
         softs=await self.get_updates(self.source_list)
-        self.softs.update(softs)
+        updated=sorted(softs.items(),key=lambda soft: soft[1].update_timestamp,reverse=True)
+        self.softs.update(updated)
         # self.printAll()
 
     def printAll(self) -> None:
